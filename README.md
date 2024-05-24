@@ -5,10 +5,10 @@ This repository contains an implementation of Dijkstra's algorithm to find the s
 
 # Nexts steps
 
-- [ ] Create Graph structure 
+- [x] Create Graph structure 
 
-- [ ] Implement  Dijkstra's algorithm
+- [x] Implement  Dijkstra's algorithm
 
-- [ ] Test instance
+- [x] Test instance
 
 - [ ] Create web application to show graph payload traffic
