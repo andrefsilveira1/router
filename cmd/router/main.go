@@ -30,6 +30,8 @@ func main() {
 
 	distances := services.Dijkstra(graph, 1)
 
+	// graph.PrintGraphTree(1) This is terrible...
+
 	// I really think that we should display this in a different way...
 	// Maybe create a figma example using React ?
 
