@@ -1,4 +1,4 @@
-package domain
+package entities
 
 type Graph struct {
 	Nodes map[int]*Node

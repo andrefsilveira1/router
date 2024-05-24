@@ -1,4 +1,4 @@
-package domain
+package entities
 
 type Node struct {
 	Id       int
@@ -12,6 +12,6 @@ func CreateNode(id int) *Node {
 	}
 }
 
-func (n *Node) AppendAdjacent(adjancentId, weight int) {
-	n.Adjacent[adjancentId] = weight
+func (n *Node) AppendAdjacent(adjacentId, weight int) {
+	n.Adjacent[adjacentId] = weight
 }

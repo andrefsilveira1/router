@@ -1,21 +1,21 @@
 package main
 
 import (
-	"andrefsilveira1/router/algorithm/domain"
+	"andrefsilveira1/router/algorithm/domain/entities"
 	"fmt"
 )
 
-func printGraph(graph domain.Graph) {
+func printGraph(graph entities.Graph) {
 	for id, node := range graph.Nodes {
 		fmt.Printf("Node ID: %d, Adjacent: %+v\n", id, node.Adjacent)
 	}
 }
 
 func main() {
-	graph := domain.CreateGraph() // Create Graph
+	graph := entities.CreateGraph() // Create Graph
 
-	node1 := domain.CreateNode(1) // Create node 1
-	node2 := domain.CreateNode(2) // Create node 2
+	node1 := entities.CreateNode(1) // Create node 1
+	node2 := entities.CreateNode(2) // Create node 2
 
 	node1.AppendAdjacent(2, 5) // Add adjacent nodes
 	node2.AppendAdjacent(1, 5) // Add adjacent nodes
