@@ -1,22 +1,22 @@
 package domain
 
 type Graph struct {
-	nodes map[int]*Node
+	Nodes map[int]*Node
 }
 
 func CreateGraph() *Graph {
 	return &Graph{
-		nodes: make(map[int]*Node),
+		Nodes: make(map[int]*Node),
 	}
 }
 
 func (g *Graph) AddNode(node *Node) {
-	if _, existent := g.nodes[node.Id]; !existent {
-		g.nodes[node.Id] = node
+	if _, existent := g.Nodes[node.Id]; !existent {
+		g.Nodes[node.Id] = node
 	}
 }
 
 func (g *Graph) GetNode(id int) (*Node, bool) {
-	node, exists := g.nodes[id]
+	node, exists := g.Nodes[id]
 	return node, exists
 }

@@ -5,7 +5,7 @@ type Node struct {
 	Adjacent map[int]int
 }
 
-func AppendNode(id int) *Node {
+func CreateNode(id int) *Node {
 	return &Node{
 		Id:       id,
 		Adjacent: make(map[int]int),
