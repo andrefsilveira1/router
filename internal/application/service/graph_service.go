@@ -17,6 +17,8 @@ func XYRoute(graph *entities.Graph, startId, destId int) []int {
 	path := []int{startNode.Id}
 	currentNode := startNode
 
+	fmt.Printf("Starting at node %d (%d, %d)\n", currentNode.Id, currentNode.X, currentNode.Y)
+
 	// First route along X dimension
 	for currentNode.X != destNode.X {
 		nextNodeId := -1
@@ -34,6 +36,7 @@ func XYRoute(graph *entities.Graph, startId, destId int) []int {
 		}
 		currentNode = graph.Nodes[nextNodeId]
 		path = append(path, currentNode.Id)
+		fmt.Printf("Visited node id: %d (x: %d, y: %d)\n", currentNode.Id, currentNode.X, currentNode.Y)
 	}
 
 	// Then route along Y dimension
@@ -53,6 +56,7 @@ func XYRoute(graph *entities.Graph, startId, destId int) []int {
 		}
 		currentNode = graph.Nodes[nextNodeId]
 		path = append(path, currentNode.Id)
+		fmt.Printf("Visited node %d (%d, %d)\n", currentNode.Id, currentNode.X, currentNode.Y)
 	}
 
 	return path

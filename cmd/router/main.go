@@ -15,7 +15,7 @@ func main() {
 	n4 := entity.CreateNode(4, 2, 1)
 	n5 := entity.CreateNode(5, 2, 2)
 
-	// Append adjacent nodes (assume weight is 1 for simplicity)
+	// I guess we should remove weights from this example
 	n1.AppendAdjacent(2, 1)
 	n2.AppendAdjacent(1, 1)
 	n2.AppendAdjacent(3, 1)
@@ -33,7 +33,7 @@ func main() {
 	graph.AddNode(n5)
 
 	// Test the XY routing algorithm
-	path := services.XYRoute(graph, 1, 4)
+	path := services.XYRoute(graph, 1, 5)
 	if path != nil {
 		fmt.Println("Path found:", path)
 	} else {
