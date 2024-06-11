@@ -1,7 +1,7 @@
 package services
 
 import (
-	"andrefsilveira1/router/internal/domain/entities"
+	entities "andrefsilveira1/router/internal/domain/entity"
 	"container/heap"
 	"math"
 )

@@ -2,7 +2,7 @@ package main
 
 import (
 	services "andrefsilveira1/router/internal/application/service"
-	"andrefsilveira1/router/internal/domain/entities"
+	entities "andrefsilveira1/router/internal/domain/entity"
 	"fmt"
 )
 
