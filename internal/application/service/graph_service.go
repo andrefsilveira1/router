@@ -16,7 +16,6 @@ func XYRoute(graph *entities.Graph, startId, destId int) []int {
 
 	path := []int{startNode.Id}
 	currentNode := startNode
-
 	fmt.Printf("Starting at node %d (%d, %d)\n", currentNode.Id, currentNode.X, currentNode.Y)
 
 	// First route along X dimension
@@ -34,9 +33,11 @@ func XYRoute(graph *entities.Graph, startId, destId int) []int {
 			fmt.Println("No valid path found in X direction.")
 			return nil
 		}
+		graph.Nodes[nextNodeId].SendPackage(currentNode.Package)
 		currentNode = graph.Nodes[nextNodeId]
 		path = append(path, currentNode.Id)
 		fmt.Printf("Visited node id: %d (x: %d, y: %d)\n", currentNode.Id, currentNode.X, currentNode.Y)
+		currentNode.PrintPackageInfo()
 	}
 
 	// Then route along Y dimension
@@ -54,9 +55,13 @@ func XYRoute(graph *entities.Graph, startId, destId int) []int {
 			fmt.Println("No valid path found in Y direction.")
 			return nil
 		}
+
+		graph.Nodes[nextNodeId].SendPackage(currentNode.Package)
 		currentNode = graph.Nodes[nextNodeId]
 		path = append(path, currentNode.Id)
 		fmt.Printf("Visited node %d (%d, %d)\n", currentNode.Id, currentNode.X, currentNode.Y)
+		currentNode.PrintPackageInfo()
+
 	}
 
 	return path

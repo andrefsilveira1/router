@@ -14,6 +14,12 @@ func main() {
 	n3 := entity.CreateNode(3, 2, 0)
 	n4 := entity.CreateNode(4, 2, 1)
 	n5 := entity.CreateNode(5, 2, 2)
+	packageData := map[string]interface{}{
+		"node_id": "1",
+		"value":   "example_value",
+		"info":    "additional_info",
+	}
+	n1.SendPackage(packageData)
 
 	// I guess we should remove weights from this example
 	n1.AppendAdjacent(2, 1)
