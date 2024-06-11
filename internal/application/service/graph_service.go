@@ -2,82 +2,58 @@ package services
 
 import (
 	entities "andrefsilveira1/router/internal/domain/entity"
-	"container/heap"
-	"math"
+	"fmt"
 )
 
-type PriorityQueue []*Item
+func XYRoute(graph *entities.Graph, startId, destId int) []int {
+	startNode, startExists := graph.GetNode(startId)
+	destNode, destExists := graph.GetNode(destId)
 
-type Item struct {
-	node     *entities.Node
-	priority int
-	index    int
-}
-
-func (pq PriorityQueue) Len() int { return len(pq) }
-
-func (pq PriorityQueue) Less(i, j int) bool {
-	return pq[i].priority < pq[j].priority
-}
-
-func (pq PriorityQueue) Swap(i, j int) {
-	pq[i], pq[j] = pq[j], pq[i]
-	pq[i].index = i
-	pq[j].index = j
-}
-
-func (pq *PriorityQueue) Push(x interface{}) {
-	n := len(*pq)
-	item := x.(*Item)
-	item.index = n
-	*pq = append(*pq, item)
-}
-
-func (pq *PriorityQueue) Pop() interface{} {
-	old := *pq
-	n := len(old)
-	item := old[n-1]
-	item.index = -1
-	*pq = old[0 : n-1]
-	return item
-}
-
-func (pq *PriorityQueue) update(item *Item, node *entities.Node, priority int) {
-	item.node = node
-	item.priority = priority
-	heap.Fix(pq, item.index)
-}
-
-func Dijkstra(graph *entities.Graph, startId int) map[int]int {
-	dist := make(map[int]int)
-	for id := range graph.Nodes {
-		dist[id] = math.MaxInt32
+	if !startExists || !destExists {
+		fmt.Println("Start or destination node does not exist.")
+		return nil
 	}
-	dist[startId] = 0
 
-	pq := &PriorityQueue{}
-	heap.Init(pq)
-	heap.Push(pq, &Item{
-		node:     graph.Nodes[startId],
-		priority: 0,
-	})
+	path := []int{startNode.Id}
+	currentNode := startNode
 
-	for pq.Len() > 0 {
-		item := heap.Pop(pq).(*Item)
-		currentNode := item.node
-		currentDistance := dist[currentNode.Id]
-
-		for adjacentId, weight := range currentNode.Adjacent {
-			alt := currentDistance + weight
-			if alt < dist[adjacentId] {
-				dist[adjacentId] = alt
-				heap.Push(pq, &Item{
-					node:     graph.Nodes[adjacentId],
-					priority: alt,
-				})
+	// First route along X dimension
+	for currentNode.X != destNode.X {
+		nextNodeId := -1
+		for adjId := range currentNode.Adjacent {
+			adjNode := graph.Nodes[adjId]
+			if (currentNode.X < destNode.X && adjNode.X > currentNode.X) ||
+				(currentNode.X > destNode.X && adjNode.X < currentNode.X) {
+				nextNodeId = adjId
+				break
 			}
 		}
+		if nextNodeId == -1 {
+			fmt.Println("No valid path found in X direction.")
+			return nil
+		}
+		currentNode = graph.Nodes[nextNodeId]
+		path = append(path, currentNode.Id)
 	}
 
-	return dist
+	// Then route along Y dimension
+	for currentNode.Y != destNode.Y {
+		nextNodeId := -1
+		for adjId := range currentNode.Adjacent {
+			adjNode := graph.Nodes[adjId]
+			if (currentNode.Y < destNode.Y && adjNode.Y > currentNode.Y) ||
+				(currentNode.Y > destNode.Y && adjNode.Y < currentNode.Y) {
+				nextNodeId = adjId
+				break
+			}
+		}
+		if nextNodeId == -1 {
+			fmt.Println("No valid path found in Y direction.")
+			return nil
+		}
+		currentNode = graph.Nodes[nextNodeId]
+		path = append(path, currentNode.Id)
+	}
+
+	return path
 }
