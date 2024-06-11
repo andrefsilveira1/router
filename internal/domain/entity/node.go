@@ -14,6 +14,7 @@ func CreateNode(id, x, y int) *Node {
 		X:        x,
 		Y:        y,
 		Adjacent: make(map[int]int),
+		Package:  map[string]interface{}{"node_id": id, "value": ""},
 	}
 }
 

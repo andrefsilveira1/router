@@ -2,42 +2,41 @@ package main
 
 import (
 	services "andrefsilveira1/router/internal/application/service"
-	entities "andrefsilveira1/router/internal/domain/entity"
+	"andrefsilveira1/router/internal/domain/entity"
 	"fmt"
 )
 
 func main() {
-	// Instanciate graph and nodes
-	graph := entities.CreateGraph()
+	graph := entity.CreateGraph()
 
-	node1 := entities.CreateNode(1)
-	node2 := entities.CreateNode(2)
-	node3 := entities.CreateNode(3)
-	node4 := entities.CreateNode(4)
+	n1 := entity.CreateNode(1, 0, 0)
+	n2 := entity.CreateNode(2, 1, 0)
+	n3 := entity.CreateNode(3, 2, 0)
+	n4 := entity.CreateNode(4, 2, 1)
+	n5 := entity.CreateNode(5, 2, 2)
 
-	node1.AppendAdjacent(2, 1)
-	node1.AppendAdjacent(3, 4)
-	node2.AppendAdjacent(3, 2)
-	node2.AppendAdjacent(4, 7)
-	node3.AppendAdjacent(4, 3)
+	// Append adjacent nodes (assume weight is 1 for simplicity)
+	n1.AppendAdjacent(2, 1)
+	n2.AppendAdjacent(1, 1)
+	n2.AppendAdjacent(3, 1)
+	n3.AppendAdjacent(2, 1)
+	n3.AppendAdjacent(4, 1)
+	n4.AppendAdjacent(3, 1)
+	n4.AppendAdjacent(5, 1)
+	n5.AppendAdjacent(4, 1)
 
-	graph.AddNode(node1)
-	graph.AddNode(node2)
-	graph.AddNode(node3)
-	graph.AddNode(node4)
+	// Add nodes to the graph
+	graph.AddNode(n1)
+	graph.AddNode(n2)
+	graph.AddNode(n3)
+	graph.AddNode(n4)
+	graph.AddNode(n5)
 
-	// Applying dijkstra algorithm
-
-	distances := services.Dijkstra(graph, 1)
-
-	// graph.PrintGraphTree(1) This is terrible...
-
-	// I really think that we should display this in a different way...
-	// Maybe create a figma example using React ?
-
-	fmt.Println("Shortest distances from node 1:")
-	for node, distance := range distances {
-		fmt.Printf("Node %d: %d\n", node, distance)
+	// Test the XY routing algorithm
+	path := services.XYRoute(graph, 1, 4)
+	if path != nil {
+		fmt.Println("Path found:", path)
+	} else {
+		fmt.Println("No path found.")
 	}
-
 }
