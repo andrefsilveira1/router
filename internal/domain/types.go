@@ -25,16 +25,22 @@ type Queue struct {
 }
 type PriorityQueue []*Queue
 
+func (m *Mesh) GetNode(x, y int) (*Node, bool) {
+	pos := y*m.Size + x
+	node, exists := m.Nodes[pos]
+	return node, exists
+}
+
 func (g *Mesh) Disable(x, y int) {
-	id := y*g.Size + x
-	if node, exists := g.Nodes[id]; exists {
+	pos := y*g.Size + x
+	if node, exists := g.Nodes[pos]; exists {
 		node.Blocked = true
 	}
 }
 
 func (m *Mesh) Enable(x, y int) {
-	id := y*m.Size + x
-	if node, exists := m.Nodes[id]; exists {
+	pos := y*m.Size + x
+	if node, exists := m.Nodes[pos]; exists {
 		node.Blocked = false
 	}
 }
