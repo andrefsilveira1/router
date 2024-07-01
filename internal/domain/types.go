@@ -2,6 +2,7 @@ package domain
 
 import (
 	"container/heap"
+	"fmt"
 	"math"
 )
 
@@ -121,4 +122,39 @@ func (m *Mesh) StarAlgorithm(start, goal *Node) ([]*Node, int) {
 	}
 
 	return nil, -1
+}
+
+func (m *Mesh) Print(start, goal *Node, path []*Node) {
+	size := m.Size
+	mesh := make([][]rune, size)
+	for y := 0; y < size; y++ {
+		mesh[y] = make([]rune, size)
+		for x := 0; x < size; x++ {
+			node, _ := m.GetNode(x, y)
+			if node.Blocked {
+				mesh[y][x] = 'x'
+			} else {
+				mesh[y][x] = '.'
+			}
+		}
+	}
+
+	if start != nil {
+		mesh[start.Y][start.X] = 'S'
+	}
+	if goal != nil {
+		mesh[goal.Y][goal.X] = 'E'
+	}
+	for _, node := range path {
+		if node != start && node != goal {
+			mesh[node.Y][node.X] = '*'
+		}
+	}
+
+	for y := 0; y < size; y++ {
+		for x := 0; x < size; x++ {
+			fmt.Printf("%c ", mesh[y][x])
+		}
+		fmt.Println()
+	}
 }
