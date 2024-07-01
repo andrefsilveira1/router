@@ -4,7 +4,7 @@ import "andrefsilveira1/router/internal/domain"
 
 var size = 8 // Tamanho da malha será fixo aqwui
 
-func CreateGrid() *domain.Mesh {
+func CreateMesh() *domain.Mesh {
 	mesh := &domain.Mesh{
 		Nodes: make(map[int]*domain.Node),
 		Size:  size,
