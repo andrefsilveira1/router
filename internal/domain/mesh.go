@@ -1,6 +1,6 @@
 package entity
 
-type Grid struct {
+type Mesh struct {
 	Nodes map[int]*Node
 	Size  int
 }
