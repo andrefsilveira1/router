@@ -1,24 +1,26 @@
 package service
 
-func CreateGrid(size int) *Mesh {
-	mesh := &Mesh{
-		Nodes: make(map[int]*Node),
+import "andrefsilveira1/router/internal/domain"
+
+var size = 8 // Tamanho da malha será fixo aqwui
+
+func CreateGrid() *domain.Mesh {
+	mesh := &domain.Mesh{
+		Nodes: make(map[int]*domain.Node),
 		Size:  size,
 	}
 	for y := 0; y < size; y++ {
 		for x := 0; x < size; x++ {
 			id := y*size + x
-			mesh.Nodes[id] = &Node{
+			mesh.Nodes[id] = &domain.Node{
 				Id:       id,
 				X:        x,
 				Y:        y,
 				Blocked:  false,
-				Adjacent: make(map[int]*Node),
+				Adjacent: make(map[int]*domain.Node),
 			}
 		}
 	}
-
-	// Connect adjacent nodes
 	for _, node := range mesh.Nodes {
 		x, y := node.X, node.Y
 		if x > 0 {
