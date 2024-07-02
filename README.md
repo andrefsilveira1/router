@@ -11,4 +11,4 @@ This repository contains an implementation of Dijkstra's algorithm to find the s
 
 - [x] Test instance
 
-- [ ] Create web application to show graph payload traffic
+- [] Let's create the information payload from each node
