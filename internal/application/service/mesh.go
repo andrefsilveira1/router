@@ -1,9 +1,11 @@
 package service
 
 import (
-	"fmt"
-	"strings"
 	"andrefsilveira1/router/internal/domain"
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
 )
 
 var size = 8 // Tamanho da malha será fixo aqwui
@@ -57,4 +59,12 @@ func BlockNodes(mesh *domain.Mesh, blockedNodes string) {
 		fmt.Sscanf(coords[1], "%d", &y)
 		mesh.Disable(x, y)
 	}
+}
+
+func DisableNodes(mesh *domain.Mesh) {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("Insira os nós bloqueados no formato 'x,y x,y ...'")
+	blockedNodes, _ := reader.ReadString('\n')
+	blockedNodes = strings.TrimSpace(blockedNodes)
+	BlockNodes(mesh, blockedNodes)
 }

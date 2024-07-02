@@ -3,21 +3,14 @@ package main
 import (
 	"andrefsilveira1/router/internal/application/service"
 	"fmt"
-	"bufio"
-	"os"
-	"strings"
 )
 
 func main() {
 	// Criando malha 8x8
 	mesh := service.CreateMesh()
 
-	// Desaabilitando nós
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("Insira os nós bloqueados no formato 'x,y x,y ...': e depois aperte Enter")
-	blockedNodes, _ := reader.ReadString('\n')
-	blockedNodes = strings.TrimSpace(blockedNodes)
-	service.BlockNodes(mesh, blockedNodes)
+	// Desabilitando nós
+	service.DisableNodes(mesh)
 
 	startNode, _ := mesh.GetNode(0, 0)
 	goalNode, _ := mesh.GetNode(7, 7)
