@@ -31,6 +31,13 @@ func (m *Mesh) Enable(x, y int) {
 	}
 }
 
+func (m *Mesh) SetPayload(x, y int, payload map[string]string) {
+	pos := y*m.Size + x
+	if node, exists := m.Nodes[pos]; exists {
+		node.Payload = payload
+	}
+}
+
 func (m *Mesh) StarAlgorithm(start, goal *Node) ([]*Node, int) {
 	openSet := make(PriorityQueue, 0)
 	heap.Init(&openSet)

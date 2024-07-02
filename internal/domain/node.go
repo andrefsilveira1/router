@@ -10,6 +10,7 @@ type Node struct {
 	Y        int
 	Blocked  bool
 	Adjacent map[int]*Node
+	Payload  map[string]string
 }
 
 // Em alguns algoritmos isso é chamado de "heurística". Pra mim, faz mais sentido chamar de "custo" ou "score"
