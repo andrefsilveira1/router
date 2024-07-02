@@ -1,6 +1,10 @@
 package service
 
-import "andrefsilveira1/router/internal/domain"
+import (
+	"fmt"
+	"strings"
+	"andrefsilveira1/router/internal/domain"
+)
 
 var size = 8 // Tamanho da malha será fixo aqwui
 
@@ -38,4 +42,19 @@ func CreateMesh() *domain.Mesh {
 	}
 
 	return mesh
+}
+
+func BlockNodes(mesh *domain.Mesh, blockedNodes string) {
+	pairs := strings.Split(blockedNodes, " ")
+	for _, pair := range pairs {
+		coords := strings.Split(pair, ",")
+		if len(coords) != 2 {
+			fmt.Println("Formato inválido, use 'x,y'")
+			continue
+		}
+		var x, y int
+		fmt.Sscanf(coords[0], "%d", &x)
+		fmt.Sscanf(coords[1], "%d", &y)
+		mesh.Disable(x, y)
+	}
 }
