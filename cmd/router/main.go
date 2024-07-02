@@ -5,6 +5,11 @@ import (
 	"fmt"
 )
 
+var payload = map[string]string{
+	"message":   "This is the payload message",
+	"timestamp": "2024-07-01T12:00:00Z",
+}
+
 func main() {
 	// Criando malha 8x8
 	mesh := service.CreateMesh()
@@ -13,6 +18,13 @@ func main() {
 	service.DisableNodes(mesh)
 
 	startNode, _ := mesh.GetNode(0, 0)
+	mesh.SetPayload(startNode.X, startNode.Y, payload)
+	for key, value := range startNode.Payload {
+		fmt.Printf("Payload => %s: %s\n", key, value)
+	}
+
+	fmt.Printf("\n")
+
 	goalNode, _ := mesh.GetNode(7, 7)
 
 	path, hops := mesh.StarAlgorithm(startNode, goalNode)
