@@ -6,7 +6,10 @@ import (
 )
 
 func main() {
+	// Criando malha 8x8
 	mesh := service.CreateMesh()
+
+	// Desaabilitando nós
 	mesh.Disable(3, 3)
 	mesh.Disable(4, 4)
 	mesh.Disable(2, 5)
@@ -17,9 +20,9 @@ func main() {
 
 	path, hops := mesh.StarAlgorithm(startNode, goalNode)
 	if path == nil {
-		fmt.Println("No path found.")
+		fmt.Println("No path found or missing path")
 	} else {
-		fmt.Printf("Path found with %d hops:\n", hops)
+		fmt.Printf("Path found with %d hops:\n", hops) // Buscar esse significado de "hops"
 		mesh.Print(startNode, goalNode, path)
 	}
 }
