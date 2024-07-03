@@ -34,4 +34,8 @@ func main() {
 		fmt.Printf("Path found with %d hops:\n", hops) // Buscar esse significado de "hops"
 		mesh.Print(startNode, goalNode, path)
 	}
+
+	for key, value := range goalNode.Payload {
+		fmt.Printf("Payload received at end => %s: %s\n", key, value)
+	}
 }

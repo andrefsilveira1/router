@@ -74,6 +74,7 @@ func (m *Mesh) StarAlgorithm(start, goal *Node) ([]*Node, int) {
 
 			if tentativeGScore < gScore[neighbor.Id] {
 				cameFrom[neighbor.Id] = current
+				neighbor.Payload = current.Payload
 				gScore[neighbor.Id] = tentativeGScore
 				fScore[neighbor.Id] = tentativeGScore + Cost(neighbor, goal)
 				heap.Push(&openSet, &Queue{node: neighbor, priority: fScore[neighbor.Id]})
