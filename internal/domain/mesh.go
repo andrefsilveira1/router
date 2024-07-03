@@ -38,6 +38,12 @@ func (m *Mesh) SetPayload(x, y int, payload map[string]string) {
 	}
 }
 
+func (m *Mesh) PrintPayload(payload map[string]string) {
+	for key, value := range payload {
+		fmt.Printf("Payload => %s: %s\n", key, value)
+	}
+}
+
 func (m *Mesh) StarAlgorithm(start, goal *Node) ([]*Node, int) {
 	openSet := make(PriorityQueue, 0)
 	heap.Init(&openSet)

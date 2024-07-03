@@ -19,23 +19,19 @@ func main() {
 
 	startNode, _ := mesh.GetNode(0, 0)
 	mesh.SetPayload(startNode.X, startNode.Y, payload)
-	for key, value := range startNode.Payload {
-		fmt.Printf("Payload => %s: %s\n", key, value)
-	}
+	mesh.PrintPayload(startNode.Payload)
 
 	fmt.Printf("\n")
 
-	goalNode, _ := mesh.GetNode(7, 7)
+	finalNode, _ := mesh.GetNode(7, 7)
 
-	path, hops := mesh.StarAlgorithm(startNode, goalNode)
+	path, hops := mesh.StarAlgorithm(startNode, finalNode)
 	if path == nil {
 		fmt.Println("No path found or missing path")
 	} else {
 		fmt.Printf("Path found with %d hops:\n", hops) // Buscar esse significado de "hops"
-		mesh.Print(startNode, goalNode, path)
+		mesh.Print(startNode, finalNode, path)
 	}
 
-	for key, value := range goalNode.Payload {
-		fmt.Printf("Payload received at end => %s: %s\n", key, value)
-	}
+	mesh.PrintPayload(finalNode.Payload)
 }
