@@ -32,10 +32,10 @@ func main() {
 	mesh.SetPayload(startNode.X, startNode.Y, payload)
 	mesh.SetPayload(startNode2.X, startNode2.Y, payload2)
 
+	fmt.Println("Initial payloads:")
 	mesh.PrintPayload(startNode.Payload)
 	mesh.PrintPayload(startNode.Payload)
-
-	fmt.Printf("\n")
+	fmt.Println()
 
 	var wg sync.WaitGroup
 	wg.Add(2)
@@ -67,14 +67,6 @@ func main() {
 	}()
 
 	wg.Wait()
-
-	// path, hops := mesh.StarAlgorithm(startNode, finalNode)
-	// if path == nil {
-	// 	fmt.Println("No path found or missing path")
-	// } else {
-	// 	fmt.Printf("Path found with %d hops:\n", hops) // Buscar esse significado de "hops"
-	// 	mesh.Print(startNode, finalNode, path)
-	// }
 
 	mesh.PrintPayload(finalNode.Payload)
 	mesh.PrintPayload(finalNode2.Payload)

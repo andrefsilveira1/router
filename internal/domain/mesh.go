@@ -91,8 +91,7 @@ func (m *Mesh) StarAlgorithm(start, goal *Node) ([]*Node, int) {
 	return nil, -1
 }
 
-// Quero melhorar essa função de print
-
+// Aposentei essa função, mas pode ser útil em algum momento...
 func (m *Mesh) Print(start, goal *Node, path []*Node) {
 	size := m.Size
 	mesh := make([][]rune, size)
@@ -120,6 +119,39 @@ func (m *Mesh) Print(start, goal *Node, path []*Node) {
 		}
 	}
 
+	for y := 0; y < size; y++ {
+		for x := 0; x < size; x++ {
+			fmt.Printf("%c ", mesh[y][x])
+		}
+		fmt.Println()
+	}
+}
+
+func (m *Mesh) PrintGrid(start, goal *Node) {
+	size := m.Size
+	mesh := make([][]rune, size)
+	for y := 0; y < size; y++ {
+		mesh[y] = make([]rune, size)
+		for x := 0; x < size; x++ {
+			node, _ := m.GetNode(x, y)
+			if node.Blocked {
+				mesh[y][x] = 'x'
+			} else if node.Payload != nil {
+				mesh[y][x] = '*'
+			} else {
+				mesh[y][x] = '.'
+			}
+		}
+	}
+
+	if start != nil {
+		mesh[start.Y][start.X] = 'S'
+	}
+	if goal != nil {
+		mesh[goal.Y][goal.X] = 'E'
+	}
+
+	fmt.Print("\033[H\033[2J") // Go vodoo here :D
 	for y := 0; y < size; y++ {
 		for x := 0; x < size; x++ {
 			fmt.Printf("%c ", mesh[y][x])
