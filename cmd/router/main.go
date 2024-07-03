@@ -2,6 +2,7 @@ package main
 
 import (
 	"andrefsilveira1/router/internal/application/service"
+	"andrefsilveira1/router/internal/domain"
 	"fmt"
 	"sync"
 )
@@ -23,44 +24,47 @@ func main() {
 	// Desabilitando nós
 	service.DisableNodes(mesh)
 
-	startNode, _ := mesh.GetNode(0, 0)
-	finalNode, _ := mesh.GetNode(7, 7)
+	startNode1, _ := mesh.GetNode(0, 0)
+	finalNode1, _ := mesh.GetNode(7, 7)
 
 	startNode2, _ := mesh.GetNode(0, 1)
 	finalNode2, _ := mesh.GetNode(7, 6)
 
-	mesh.SetPayload(startNode.X, startNode.Y, payload)
+	mesh.SetPayload(startNode1.X, startNode1.Y, payload)
 	mesh.SetPayload(startNode2.X, startNode2.Y, payload2)
 
 	fmt.Println("Initial payloads:")
-	mesh.PrintPayload(startNode.Payload)
-	mesh.PrintPayload(startNode.Payload)
-	fmt.Println()
+	mesh.PrintPayload(startNode1.Payload)
+	mesh.PrintPayload(startNode2.Payload)
 
 	var wg sync.WaitGroup
 	wg.Add(2)
 
+	var path1, path2 []*domain.Node
+
 	go func() {
 		defer wg.Done()
-		path, hops := mesh.StarAlgorithm(startNode, finalNode)
-		if path == nil {
+		var hops int
+		path1, hops = mesh.StarAlgorithm(startNode1, finalNode1, path2, startNode2, finalNode2, 'A')
+		if path1 == nil {
 			fmt.Println("No path found or missing path for payload 1")
 		} else {
 			fmt.Printf("Path found with %d hops for payload 1:\n", hops)
-			mesh.Print(startNode, finalNode, path)
+			mesh.PrintMesh(startNode1, finalNode1, startNode2, finalNode2, path1, path2)
 			fmt.Println("\nPayload at goal node 1:")
-			mesh.PrintPayload(finalNode.Payload)
+			mesh.PrintPayload(finalNode1.Payload)
 		}
 	}()
 
 	go func() {
 		defer wg.Done()
-		path, hops := mesh.StarAlgorithm(startNode2, finalNode2)
-		if path == nil {
+		var hops int
+		path2, hops = mesh.StarAlgorithm(startNode2, finalNode2, path1, startNode1, finalNode1, 'B')
+		if path2 == nil {
 			fmt.Println("No path found or missing path for payload 2")
 		} else {
 			fmt.Printf("Path found with %d hops for payload 2:\n", hops)
-			mesh.Print(startNode2, finalNode2, path)
+			mesh.PrintMesh(startNode1, finalNode1, startNode2, finalNode2, path1, path2)
 			fmt.Println("\nPayload at goal node 2:")
 			mesh.PrintPayload(finalNode2.Payload)
 		}
@@ -68,6 +72,7 @@ func main() {
 
 	wg.Wait()
 
-	mesh.PrintPayload(finalNode.Payload)
+	fmt.Println("\nFinal payloads at goal nodes:")
+	mesh.PrintPayload(finalNode1.Payload)
 	mesh.PrintPayload(finalNode2.Payload)
 }

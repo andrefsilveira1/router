@@ -4,6 +4,7 @@ import (
 	"container/heap"
 	"fmt"
 	"math"
+	"time"
 )
 
 type Mesh struct {
@@ -44,7 +45,7 @@ func (m *Mesh) PrintPayload(payload map[string]string) {
 	}
 }
 
-func (m *Mesh) StarAlgorithm(start, goal *Node) ([]*Node, int) {
+func (m *Mesh) StarAlgorithm(start, goal *Node, otherPath []*Node, otherStart, otherGoal *Node, pathSymbol rune) ([]*Node, int) {
 	openSet := make(PriorityQueue, 0)
 	heap.Init(&openSet)
 	heap.Push(&openSet, &Queue{node: start, priority: 0})
@@ -60,11 +61,13 @@ func (m *Mesh) StarAlgorithm(start, goal *Node) ([]*Node, int) {
 	gScore[start.Id] = 0
 	fScore[start.Id] = Cost(start, goal)
 
+	var path []*Node
+
 	for openSet.Len() > 0 {
 		current := heap.Pop(&openSet).(*Queue).node
 
 		if current == goal {
-			path := []*Node{}
+			path = []*Node{}
 			for current != nil {
 				path = append([]*Node{current}, path...)
 				current = cameFrom[current.Id]
@@ -73,7 +76,9 @@ func (m *Mesh) StarAlgorithm(start, goal *Node) ([]*Node, int) {
 		}
 
 		for _, neighbor := range current.Adjacent {
+			neighbor.mu.Lock()
 			if neighbor.Blocked {
+				neighbor.mu.Unlock()
 				continue
 			}
 			tentativeGScore := gScore[current.Id] + 1
@@ -85,14 +90,19 @@ func (m *Mesh) StarAlgorithm(start, goal *Node) ([]*Node, int) {
 				fScore[neighbor.Id] = tentativeGScore + Cost(neighbor, goal)
 				heap.Push(&openSet, &Queue{node: neighbor, priority: fScore[neighbor.Id]})
 			}
+			neighbor.mu.Unlock()
 		}
+
+		// Print the current state of the mesh
+		m.PrintMesh(start, goal, otherStart, otherGoal, path, otherPath)
+		time.Sleep(100 * time.Millisecond) // Sleep to visualize the steps
+		fmt.Print("\033[H\033[2J")
 	}
 
 	return nil, -1
 }
 
-// Aposentei essa função, mas pode ser útil em algum momento...
-func (m *Mesh) Print(start, goal *Node, path []*Node) {
+func (m *Mesh) PrintMesh(start1, goal1, start2, goal2 *Node, path1, path2 []*Node) {
 	size := m.Size
 	mesh := make([][]rune, size)
 	for y := 0; y < size; y++ {
@@ -107,55 +117,38 @@ func (m *Mesh) Print(start, goal *Node, path []*Node) {
 		}
 	}
 
-	if start != nil {
-		mesh[start.Y][start.X] = 'S'
+	// Mark the paths
+	for _, node := range path1 {
+		if node != start1 && node != goal1 {
+			mesh[node.Y][node.X] = '+'
+		}
 	}
-	if goal != nil {
-		mesh[goal.Y][goal.X] = 'E'
-	}
-	for _, node := range path {
-		if node != start && node != goal {
-			mesh[node.Y][node.X] = '*'
+	for _, node := range path2 {
+		if node != start2 && node != goal2 {
+			mesh[node.Y][node.X] = '-'
 		}
 	}
 
+	// Mark the start and goal nodes
+	if start1 != nil {
+		mesh[start1.Y][start1.X] = 'S'
+	}
+	if goal1 != nil {
+		mesh[goal1.Y][goal1.X] = 'E'
+	}
+	if start2 != nil {
+		mesh[start2.Y][start2.X] = '1'
+	}
+	if goal2 != nil {
+		mesh[goal2.Y][goal2.X] = '2'
+	}
+
+	// Print the updated matrix
 	for y := 0; y < size; y++ {
 		for x := 0; x < size; x++ {
 			fmt.Printf("%c ", mesh[y][x])
 		}
 		fmt.Println()
 	}
-}
 
-func (m *Mesh) PrintGrid(start, goal *Node) {
-	size := m.Size
-	mesh := make([][]rune, size)
-	for y := 0; y < size; y++ {
-		mesh[y] = make([]rune, size)
-		for x := 0; x < size; x++ {
-			node, _ := m.GetNode(x, y)
-			if node.Blocked {
-				mesh[y][x] = 'x'
-			} else if node.Payload != nil {
-				mesh[y][x] = '*'
-			} else {
-				mesh[y][x] = '.'
-			}
-		}
-	}
-
-	if start != nil {
-		mesh[start.Y][start.X] = 'S'
-	}
-	if goal != nil {
-		mesh[goal.Y][goal.X] = 'E'
-	}
-
-	fmt.Print("\033[H\033[2J") // Go vodoo here :D
-	for y := 0; y < size; y++ {
-		for x := 0; x < size; x++ {
-			fmt.Printf("%c ", mesh[y][x])
-		}
-		fmt.Println()
-	}
 }
