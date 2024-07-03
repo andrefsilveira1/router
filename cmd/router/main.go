@@ -2,6 +2,7 @@ package main
 
 import (
 	"andrefsilveira1/router/internal/application/service"
+	"andrefsilveira1/router/internal/domain"
 	"fmt"
 	"sync"
 )
@@ -29,11 +30,29 @@ func main() {
 	startNode2, _ := mesh.GetNode(0, 1)
 	finalNode2, _ := mesh.GetNode(7, 6)
 
-	mesh.SetPayload(startNode.X, startNode.Y, payload)
-	mesh.SetPayload(startNode2.X, startNode2.Y, payload2)
+		// Enviar flit para startNode
+		flit1 := &domain.Flit{
+			ID:        1,
+			Source:    startNode,
+			Destination: finalNode,
+			Payload:   payload,
+		}
+		startNode.SendFlit(flit1)
+	
+		// Enviar flit para startNode2
+		flit2 := &domain.Flit{
+			ID:        2,
+			Source:    startNode2,
+			Destination: finalNode2,
+			Payload:   payload2,
+		}
+		startNode2.SendFlit(flit2)
 
-	mesh.PrintPayload(startNode.Payload)
-	mesh.PrintPayload(startNode.Payload)
+	// mesh.SetPayload(startNode.X, startNode.Y, payload)
+	// mesh.SetPayload(startNode2.X, startNode2.Y, payload2)
+
+	// mesh.PrintPayload(startNode.Payload)
+	// mesh.PrintPayload(startNode.Payload)
 
 	fmt.Printf("\n")
 
@@ -42,29 +61,42 @@ func main() {
 
 	go func() {
 		defer wg.Done()
-		path, hops := mesh.StarAlgorithm(startNode, finalNode)
-		if path == nil {
-			fmt.Println("No path found or missing path for payload 1")
-		} else {
-			fmt.Printf("Path found with %d hops for payload 1:\n", hops)
-			mesh.Print(startNode, finalNode, path)
-			fmt.Println("\nPayload at goal node 1:")
-			mesh.PrintPayload(finalNode.Payload)
+		for {
+			flit := startNode.ReceiveFlit()
+			if flit == nil {
+				break
+			}
+			path, hops := mesh.StarAlgorithm(flit.Source, flit.Destination)
+			if path == nil {
+				fmt.Printf("No path found or missing path for payload %d\n", flit.ID)
+			} else {
+				fmt.Printf("Path found with %d hops for payload %d:\n", hops, flit.ID)
+				mesh.Print(flit.Source, flit.Destination, path)
+				fmt.Printf("\nPayload at goal node %d:\n", flit.Destination.Id)
+				mesh.PrintPayload(flit.Destination.Payload)
+			}
 		}
 	}()
 
 	go func() {
 		defer wg.Done()
-		path, hops := mesh.StarAlgorithm(startNode2, finalNode2)
-		if path == nil {
-			fmt.Println("No path found or missing path for payload 2")
-		} else {
-			fmt.Printf("Path found with %d hops for payload 2:\n", hops)
-			mesh.Print(startNode2, finalNode2, path)
-			fmt.Println("\nPayload at goal node 2:")
-			mesh.PrintPayload(finalNode2.Payload)
+		for {
+			flit := startNode2.ReceiveFlit()
+			if flit == nil {
+				break
+			}
+			path, hops := mesh.StarAlgorithm(flit.Source, flit.Destination)
+			if path == nil {
+				fmt.Printf("No path found or missing path for payload %d\n", flit.ID)
+			} else {
+				fmt.Printf("Path found with %d hops for payload %d:\n", hops, flit.ID)
+				mesh.Print(flit.Source, flit.Destination, path)
+				fmt.Printf("\nPayload at goal node %d:\n", flit.Destination.Id)
+				mesh.PrintPayload(flit.Destination.Payload)
+			}
 		}
 	}()
+
 
 	wg.Wait()
 
