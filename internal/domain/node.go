@@ -2,6 +2,7 @@ package domain
 
 import (
 	"math"
+	"sync"
 )
 
 type Node struct {
@@ -11,6 +12,7 @@ type Node struct {
 	Blocked  bool
 	Adjacent map[int]*Node
 	Payload  map[string]string
+	mu       sync.Mutex
 }
 
 // Em alguns algoritmos isso é chamado de "heurística". Pra mim, faz mais sentido chamar de "custo" ou "score"
