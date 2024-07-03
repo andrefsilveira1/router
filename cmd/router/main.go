@@ -2,7 +2,6 @@ package main
 
 import (
 	"andrefsilveira1/router/internal/application/service"
-	"andrefsilveira1/router/internal/domain"
 	"fmt"
 	"sync"
 )
@@ -18,10 +17,10 @@ var payload2 = map[string]string{
 }
 
 func main() {
-	// Criando malha 8x8
+	// Create an 8x8 mesh
 	mesh := service.CreateMesh()
 
-	// Desabilitando nós
+	// Disable nodes
 	service.DisableNodes(mesh)
 
 	startNode1, _ := mesh.GetNode(0, 0)
@@ -40,32 +39,24 @@ func main() {
 	var wg sync.WaitGroup
 	wg.Add(2)
 
-	var path1, path2 []*domain.Node
-
 	go func() {
 		defer wg.Done()
-		var hops int
-		path1, hops = mesh.StarAlgorithm(startNode1, finalNode1, path2, startNode2, finalNode2, 'A')
+		path1, hops1 := mesh.StarAlgorithm(startNode1, finalNode1, '+')
 		if path1 == nil {
 			fmt.Println("No path found or missing path for payload 1")
 		} else {
-			fmt.Printf("Path found with %d hops for payload 1:\n", hops)
-			mesh.PrintMesh(startNode1, finalNode1, startNode2, finalNode2, path1, path2)
-			fmt.Println("\nPayload at goal node 1:")
+			fmt.Printf("Path found with %d hops for payload 1:\n", hops1)
 			mesh.PrintPayload(finalNode1.Payload)
 		}
 	}()
 
 	go func() {
 		defer wg.Done()
-		var hops int
-		path2, hops = mesh.StarAlgorithm(startNode2, finalNode2, path1, startNode1, finalNode1, 'B')
+		path2, hops2 := mesh.StarAlgorithm(startNode2, finalNode2, '-')
 		if path2 == nil {
 			fmt.Println("No path found or missing path for payload 2")
 		} else {
-			fmt.Printf("Path found with %d hops for payload 2:\n", hops)
-			mesh.PrintMesh(startNode1, finalNode1, startNode2, finalNode2, path1, path2)
-			fmt.Println("\nPayload at goal node 2:")
+			fmt.Printf("Path found with %d hops for payload 2:\n", hops2)
 			mesh.PrintPayload(finalNode2.Payload)
 		}
 	}()

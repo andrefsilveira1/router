@@ -45,7 +45,7 @@ func (m *Mesh) PrintPayload(payload map[string]string) {
 	}
 }
 
-func (m *Mesh) StarAlgorithm(start, goal *Node, otherPath []*Node, otherStart, otherGoal *Node, pathSymbol rune) ([]*Node, int) {
+func (m *Mesh) StarAlgorithm(start, goal *Node, pathSymbol rune) ([]*Node, int) {
 	openSet := make(PriorityQueue, 0)
 	heap.Init(&openSet)
 	heap.Push(&openSet, &Queue{node: start, priority: 0})
@@ -93,8 +93,11 @@ func (m *Mesh) StarAlgorithm(start, goal *Node, otherPath []*Node, otherStart, o
 			neighbor.mu.Unlock()
 		}
 
+		// Add the current node to the path to visualize the progress
+		path = append(path, current)
+
 		// Print the current state of the mesh
-		m.PrintMesh(start, goal, otherStart, otherGoal, path, otherPath)
+		m.PrintMesh(start, goal, pathSymbol, path)
 		time.Sleep(100 * time.Millisecond) // Sleep to visualize the steps
 		fmt.Print("\033[H\033[2J")
 	}
@@ -102,7 +105,7 @@ func (m *Mesh) StarAlgorithm(start, goal *Node, otherPath []*Node, otherStart, o
 	return nil, -1
 }
 
-func (m *Mesh) PrintMesh(start1, goal1, start2, goal2 *Node, path1, path2 []*Node) {
+func (m *Mesh) PrintMesh(start, goal *Node, pathSymbol rune, path []*Node) {
 	size := m.Size
 	mesh := make([][]rune, size)
 	for y := 0; y < size; y++ {
@@ -117,30 +120,19 @@ func (m *Mesh) PrintMesh(start1, goal1, start2, goal2 *Node, path1, path2 []*Nod
 		}
 	}
 
-	// Mark the paths
-	for _, node := range path1 {
-		if node != start1 && node != goal1 {
-			mesh[node.Y][node.X] = '+'
-		}
-	}
-	for _, node := range path2 {
-		if node != start2 && node != goal2 {
-			mesh[node.Y][node.X] = '-'
+	// Mark the path
+	for _, node := range path {
+		if node != start && node != goal {
+			mesh[node.Y][node.X] = pathSymbol
 		}
 	}
 
 	// Mark the start and goal nodes
-	if start1 != nil {
-		mesh[start1.Y][start1.X] = 'S'
+	if start != nil {
+		mesh[start.Y][start.X] = 'S'
 	}
-	if goal1 != nil {
-		mesh[goal1.Y][goal1.X] = 'E'
-	}
-	if start2 != nil {
-		mesh[start2.Y][start2.X] = '1'
-	}
-	if goal2 != nil {
-		mesh[goal2.Y][goal2.X] = '2'
+	if goal != nil {
+		mesh[goal.Y][goal.X] = 'E'
 	}
 
 	// Print the updated matrix
@@ -150,5 +142,4 @@ func (m *Mesh) PrintMesh(start1, goal1, start2, goal2 *Node, path1, path2 []*Nod
 		}
 		fmt.Println()
 	}
-
 }
