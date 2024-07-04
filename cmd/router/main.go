@@ -1,9 +1,10 @@
 package main
 
 import (
-	"andrefsilveira1/router/internal/domain"
 	"andrefsilveira1/router/internal/application/service"
+	"andrefsilveira1/router/internal/domain"
 	"fmt"
+	"sync"
 )
 
 var payload = map[string]string{
@@ -38,9 +39,11 @@ func main() {
 	fmt.Printf("\n")
 
 	done := make(chan bool, 2)
+	var mu sync.Mutex
 
 	go func() {
 		path, hops := mesh.StarAlgorithm(startNode, finalNode)
+		mu.Lock()
 		if path == nil {
 			fmt.Println("No path found or missing path for payload 1")
 		} else {
@@ -49,11 +52,13 @@ func main() {
 			fmt.Println("\nPayload at goal node 1:")
 			mesh.PrintPayload(finalNode.Payload)
 		}
+		mu.Unlock()
 		done <- true
 	}()
 
 	go func() {
 		path, hops := mesh.StarAlgorithm(startNode2, finalNode2)
+		mu.Lock()
 		if path == nil {
 			fmt.Println("No path found or missing path for payload 2")
 		} else {
@@ -62,6 +67,7 @@ func main() {
 			fmt.Println("\nPayload at goal node 2:")
 			mesh.PrintPayload(finalNode2.Payload)
 		}
+		mu.Unlock()
 		done <- true
 	}()
 
@@ -89,7 +95,9 @@ func main() {
 			if flit == nil {
 				break
 			}
+			mu.Lock()
 			fmt.Printf("Flit received at final node 1: %v\n", flit.Payload)
+			mu.Unlock()
 		}
 		done <- true
 	}()
@@ -100,7 +108,9 @@ func main() {
 			if flit == nil {
 				break
 			}
+			mu.Lock()
 			fmt.Printf("Flit received at final node 2: %v\n", flit.Payload)
+			mu.Unlock()
 		}
 		done <- true
 	}()
@@ -108,6 +118,8 @@ func main() {
 	<-done
 	<-done
 
+	mu.Lock()
 	mesh.PrintPayload(finalNode.Payload)
 	mesh.PrintPayload(finalNode2.Payload)
+	mu.Unlock()
 }

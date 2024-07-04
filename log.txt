@@ -1,0 +1,243 @@
+❯ go run ./cmd/router/main.go
+
+Insira os nós bloqueados no formato 'x,y x,y ...'
+
+Formato inválido, use 'x,y'
+Payload => message: This is the payload message
+Payload => timestamp: 2024-07-01T12:00:00Z
+Payload => message: This is the payload message
+Payload => timestamp: 2024-07-01T12:00:00Z
+
+Path found with 12 hops for payload 2:
+. . . . . . . . 
+S * . . . . . . 
+. * * . . . . . 
+. . * * * * * * 
+. . . . . . . * 
+. . . . . . . * 
+. . . . . . . E 
+. . . . . . . . 
+
+Payload at goal node 2:
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Path found with 14 hops for payload 1:
+S . . . . . . . 
+* . . . . . . . 
+* . . . . . . . 
+* * . . . . . . 
+. * . . . . . . 
+. * . . . . . . 
+. * . . . . . . 
+. * * * * * * E 
+
+Payload at goal node 1:
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+cordeiro in router on  develop [$!] 
+❯ go run ./cmd/router/main.go
+
+Insira os nós bloqueados no formato 'x,y x,y ...'
+
+Formato inválido, use 'x,y'
+Payload => message: This is the payload message
+Payload => timestamp: 2024-07-01T12:00:00Z
+Payload => message: This is the payload message
+Payload => timestamp: 2024-07-01T12:00:00Z
+
+Path found with 12 hops for payload 2:
+. . . . . . . . 
+S . . . . . . . 
+* . . . . . . . 
+* * * . . . . . 
+. . * * * * . . 
+. . . . . * * . 
+. . . . . . * E 
+. . . . . . . . 
+
+Payload at goal node 2:
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Path found with 14 hops for payload 1:
+S * . . . . . . 
+. * . . . . . . 
+. * . . . . . . 
+. * . . . . . . 
+. * . . . . . . 
+. * * . . . . . 
+. . * * . . . . 
+. . . * * * * E 
+
+Payload at goal node 1:
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+cordeiro in router on  develop [$!] 
+❯ go run ./cmd/router/main.go
+
+Insira os nós bloqueados no formato 'x,y x,y ...'
+
+Formato inválido, use 'x,y'
+Payload => message: This is the payload message
+Payload => timestamp: 2024-07-01T12:00:00Z
+Payload => message: This is the payload message
+Payload => timestamp: 2024-07-01T12:00:00Z
+
+Path found with 12 hops for payload 2:
+. . . . . . . . 
+S * . . . . . . 
+. * . . . . . . 
+. * . . . . . . 
+. * * * * * * * 
+. . . . . . . * 
+. . . . . . . E 
+. . . . . . . . 
+
+Payload at goal node 2:
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => message: This is the second payload message
+Path found with 14 hops for payload 1:
+S * * * . . . . 
+. . . * * . . . 
+. . . . * . . . 
+. . . . * . . . 
+. . . . * . . . 
+. . . . * . . . 
+. . . . * * . . 
+. . . . . * * E 
+
+Payload at goal node 1:
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+cordeiro in router on  develop [$!] 
+❯ go run ./cmd/router/main.go
+
+Insira os nós bloqueados no formato 'x,y x,y ...'
+
+Formato inválido, use 'x,y'
+Payload => message: This is the payload message
+Payload => timestamp: 2024-07-01T12:00:00Z
+Payload => message: This is the payload message
+Payload => timestamp: 2024-07-01T12:00:00Z
+
+Path found with 12 hops for payload 2:
+. . . . . . . . 
+S * . . . . . . 
+. * * * * . . . 
+. . . . * * * * 
+. . . . . . . * 
+. . . . . . . * 
+. . . . . . . E 
+. . . . . . . . 
+
+Payload at goal node 2:
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Path found with 14 hops for payload 1:
+S * . . . . . . 
+. * . . . . . . 
+. * . . . . . . 
+. * . . . . . . 
+. * . . . . . . 
+. * . . . . . . 
+. * * * * * * * 
+. . . . . . . E 
+
+Payload at goal node 1:
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => message: This is the second payload message
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+
+❯ go run ./cmd/router/main.go
+
+Insira os nós bloqueados no formato 'x,y x,y ...'
+2,2 3,4 3,6 4,5 5,7
+Payload => message: This is the payload message
+Payload => timestamp: 2024-07-01T12:00:00Z
+Payload => message: This is the payload message
+Payload => timestamp: 2024-07-01T12:00:00Z
+
+Path found with 12 hops for payload 2:
+. . . . . . . . 
+S * . . . . . . 
+. * x . . . . . 
+. * * * * * . . 
+. . . x . * . . 
+. . . . x * * * 
+. . . x . . . E 
+. . . . . x . . 
+
+Payload at goal node 2:
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Path found with 14 hops for payload 1:
+S * * * * * . . 
+. . . . . * * . 
+. . x . . . * * 
+. . . . . . . * 
+. . . x . . . * 
+. . . . x . . * 
+. . . x . . . * 
+. . . . . x . E 
+
+Payload at goal node 1:
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => message: This is the second payload message
+
+ go run ./cmd/router/main.go
+
+Insira os nós bloqueados no formato 'x,y x,y ...'
+2,2 3,4 3,6 4,5 5,7
+Payload => message: This is the payload message
+Payload => timestamp: 2024-07-01T12:00:00Z
+Payload => message: This is the payload message
+Payload => timestamp: 2024-07-01T12:00:00Z
+
+Path found with 12 hops for payload 2:
+. . . . . . . . 
+S * . . . . . . 
+. * x . . . . . 
+. * * * * * . . 
+. . . x . * * * 
+. . . . x . . * 
+. . . x . . . E 
+. . . . . x . . 
+
+Payload at goal node 2:
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Path found with 14 hops for payload 1:
+S * . . . . . . 
+. * * * . . . . 
+. . x * . . . . 
+. . . * * . . . 
+. . . x * * . . 
+. . . . x * . . 
+. . . x . * * . 
+. . . . . x * E 
+
+Payload at goal node 1:
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => message: This is the second payload message
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => timestamp: 2024-08-01T12:00:00Z
+Payload => message: This is the second payload message
