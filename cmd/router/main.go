@@ -1,10 +1,9 @@
 package main
 
 import (
-	"andrefsilveira1/router/internal/application/service"
 	"andrefsilveira1/router/internal/domain"
+	"andrefsilveira1/router/internal/application/service"
 	"fmt"
-	"sync"
 )
 
 var payload = map[string]string{
@@ -30,83 +29,84 @@ func main() {
 	startNode2, _ := mesh.GetNode(0, 1)
 	finalNode2, _ := mesh.GetNode(7, 6)
 
-		// Enviar flit para startNode
-		flit1 := &domain.Flit{
-			ID:        1,
-			Source:    startNode,
-			Destination: finalNode,
-			Payload:   payload,
-		}
-		startNode.SendFlit(flit1)
-	
-		// Enviar flit para startNode2
-		flit2 := &domain.Flit{
-			ID:        2,
-			Source:    startNode2,
-			Destination: finalNode2,
-			Payload:   payload2,
-		}
-		startNode2.SendFlit(flit2)
+	mesh.SetPayload(startNode.X, startNode.Y, payload)
+	mesh.SetPayload(startNode2.X, startNode2.Y, payload2)
 
-	// mesh.SetPayload(startNode.X, startNode.Y, payload)
-	// mesh.SetPayload(startNode2.X, startNode2.Y, payload2)
-
-	// mesh.PrintPayload(startNode.Payload)
-	// mesh.PrintPayload(startNode.Payload)
+	mesh.PrintPayload(startNode.Payload)
+	mesh.PrintPayload(startNode.Payload)
 
 	fmt.Printf("\n")
 
-	var wg sync.WaitGroup
-	wg.Add(2)
+	done := make(chan bool, 2)
 
 	go func() {
-		defer wg.Done()
-		for {
-			flit := startNode.ReceiveFlit()
-			if flit == nil {
-				break
-			}
-			path, hops := mesh.StarAlgorithm(flit.Source, flit.Destination)
-			if path == nil {
-				fmt.Printf("No path found or missing path for payload %d\n", flit.ID)
-			} else {
-				fmt.Printf("Path found with %d hops for payload %d:\n", hops, flit.ID)
-				mesh.Print(flit.Source, flit.Destination, path)
-				fmt.Printf("\nPayload at goal node %d:\n", flit.Destination.Id)
-				mesh.PrintPayload(flit.Destination.Payload)
-			}
+		path, hops := mesh.StarAlgorithm(startNode, finalNode)
+		if path == nil {
+			fmt.Println("No path found or missing path for payload 1")
+		} else {
+			fmt.Printf("Path found with %d hops for payload 1:\n", hops)
+			mesh.Print(startNode, finalNode, path)
+			fmt.Println("\nPayload at goal node 1:")
+			mesh.PrintPayload(finalNode.Payload)
 		}
+		done <- true
 	}()
 
 	go func() {
-		defer wg.Done()
+		path, hops := mesh.StarAlgorithm(startNode2, finalNode2)
+		if path == nil {
+			fmt.Println("No path found or missing path for payload 2")
+		} else {
+			fmt.Printf("Path found with %d hops for payload 2:\n", hops)
+			mesh.Print(startNode2, finalNode2, path)
+			fmt.Println("\nPayload at goal node 2:")
+			mesh.PrintPayload(finalNode2.Payload)
+		}
+		done <- true
+	}()
+
+	<-done
+	<-done
+
+	flit1 := &domain.Flit{
+		Source:      startNode,
+		Destination: finalNode,
+		Payload:     payload,
+	}
+
+	flit2 := &domain.Flit{
+		Source:      startNode2,
+		Destination: finalNode2,
+		Payload:     payload2,
+	}
+
+	startNode.SendFlit(flit1)
+	startNode2.SendFlit(flit2)
+
+	go func() {
 		for {
-			flit := startNode2.ReceiveFlit()
+			flit := finalNode.ReceiveFlit()
 			if flit == nil {
 				break
 			}
-			path, hops := mesh.StarAlgorithm(flit.Source, flit.Destination)
-			if path == nil {
-				fmt.Printf("No path found or missing path for payload %d\n", flit.ID)
-			} else {
-				fmt.Printf("Path found with %d hops for payload %d:\n", hops, flit.ID)
-				mesh.Print(flit.Source, flit.Destination, path)
-				fmt.Printf("\nPayload at goal node %d:\n", flit.Destination.Id)
-				mesh.PrintPayload(flit.Destination.Payload)
-			}
+			fmt.Printf("Flit received at final node 1: %v\n", flit.Payload)
 		}
+		done <- true
 	}()
 
+	go func() {
+		for {
+			flit := finalNode2.ReceiveFlit()
+			if flit == nil {
+				break
+			}
+			fmt.Printf("Flit received at final node 2: %v\n", flit.Payload)
+		}
+		done <- true
+	}()
 
-	wg.Wait()
-
-	// path, hops := mesh.StarAlgorithm(startNode, finalNode)
-	// if path == nil {
-	// 	fmt.Println("No path found or missing path")
-	// } else {
-	// 	fmt.Printf("Path found with %d hops:\n", hops) // Buscar esse significado de "hops"
-	// 	mesh.Print(startNode, finalNode, path)
-	// }
+	<-done
+	<-done
 
 	mesh.PrintPayload(finalNode.Payload)
 	mesh.PrintPayload(finalNode2.Payload)
