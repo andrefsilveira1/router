@@ -4,6 +4,7 @@ import (
 	"container/heap"
 	"fmt"
 	"math"
+	"sync"
 	"time"
 )
 
@@ -45,7 +46,9 @@ func (m *Mesh) PrintPayload(payload map[string]string) {
 	}
 }
 
-func (m *Mesh) StarAlgorithm(start, goal *Node, pathSymbol rune) ([]*Node, int) {
+func (m *Mesh) StarAlgorithm(start, goal *Node, pathSymbol rune, wg *sync.WaitGroup) ([]*Node, int) {
+	defer wg.Done()
+
 	openSet := make(PriorityQueue, 0)
 	heap.Init(&openSet)
 	heap.Push(&openSet, &Queue{node: start, priority: 0})
@@ -93,19 +96,16 @@ func (m *Mesh) StarAlgorithm(start, goal *Node, pathSymbol rune) ([]*Node, int) 
 			neighbor.mu.Unlock()
 		}
 
-		// Add the current node to the path to visualize the progress
-		path = append(path, current)
-
-		// Print the current state of the mesh
-		m.PrintMesh(start, goal, pathSymbol, path)
-		time.Sleep(100 * time.Millisecond) // Sleep to visualize the steps
+		// Print the current state of the mesh with payloads moving
+		m.PrintMeshWithPayloads(current, pathSymbol)
+		time.Sleep(500 * time.Millisecond) // Adjust sleep duration as needed
 		fmt.Print("\033[H\033[2J")
 	}
 
 	return nil, -1
 }
 
-func (m *Mesh) PrintMesh(start, goal *Node, pathSymbol rune, path []*Node) {
+func (m *Mesh) PrintMeshWithPayloads(current *Node, pathSymbol rune) {
 	size := m.Size
 	mesh := make([][]rune, size)
 	for y := 0; y < size; y++ {
@@ -120,22 +120,39 @@ func (m *Mesh) PrintMesh(start, goal *Node, pathSymbol rune, path []*Node) {
 		}
 	}
 
-	// Mark the path
-	for _, node := range path {
-		if node != start && node != goal {
-			mesh[node.Y][node.X] = pathSymbol
+	// Mark the current position of the payload
+	mesh[current.Y][current.X] = pathSymbol
+
+	// Print the updated matrix
+	for y := 0; y < size; y++ {
+		for x := 0; x < size; x++ {
+			fmt.Printf("%c ", mesh[y][x])
+		}
+		fmt.Println()
+	}
+}
+
+func (m *Mesh) PrintFinalPath(path []*Node, pathSymbol rune) {
+	size := m.Size
+	mesh := make([][]rune, size)
+	for y := 0; y < size; y++ {
+		mesh[y] = make([]rune, size)
+		for x := 0; x < size; x++ {
+			node, _ := m.GetNode(x, y)
+			if node.Blocked {
+				mesh[y][x] = 'x'
+			} else {
+				mesh[y][x] = '.'
+			}
 		}
 	}
 
-	// Mark the start and goal nodes
-	if start != nil {
-		mesh[start.Y][start.X] = 'S'
-	}
-	if goal != nil {
-		mesh[goal.Y][goal.X] = 'E'
+	// Mark the final path
+	for _, node := range path {
+		mesh[node.Y][node.X] = pathSymbol
 	}
 
-	// Print the updated matrix
+	// Print the final matrix
 	for y := 0; y < size; y++ {
 		for x := 0; x < size; x++ {
 			fmt.Printf("%c ", mesh[y][x])

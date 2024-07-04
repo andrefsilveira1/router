@@ -41,7 +41,7 @@ func main() {
 
 	go func() {
 		defer wg.Done()
-		path1, hops1 := mesh.StarAlgorithm(startNode1, finalNode1, '+')
+		path1, hops1 := mesh.StarAlgorithm(startNode1, finalNode1, '+', &wg)
 		if path1 == nil {
 			fmt.Println("No path found or missing path for payload 1")
 		} else {
@@ -52,7 +52,7 @@ func main() {
 
 	go func() {
 		defer wg.Done()
-		path2, hops2 := mesh.StarAlgorithm(startNode2, finalNode2, '-')
+		path2, hops2 := mesh.StarAlgorithm(startNode2, finalNode2, '*', &wg)
 		if path2 == nil {
 			fmt.Println("No path found or missing path for payload 2")
 		} else {
